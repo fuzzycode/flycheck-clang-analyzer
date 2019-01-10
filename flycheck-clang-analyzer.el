@@ -103,7 +103,8 @@
 ;; ccls
 (defun flycheck-clang-analyzer--ccls-active ()
   "Check if 'ccls-mode' is available and active."
-  (and (fboundp 'ccls--is-ccls-buffer) (ccls--is-ccls-buffer)))
+  (and (fboundp 'ccls-file-info)
+       (> (length (gethash "args" (ccls-file-info))) 0)))
 
 (defun flycheck-clang-analyzer--ccls-get-compile-options ()
   "Get compile options from ccls."
