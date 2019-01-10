@@ -1,6 +1,6 @@
 ;;; flycheck-clang-analyzer.el --- Integrate Clang Analyzer with flycheck
 
-;; Copyright (c) 2017 Alex Murray
+;; Copyright (c) 2017, 2019 Alex Murray
 
 ;; Author: Alex Murray <murray.alex@gmail.com>
 ;; Maintainer: Alex Murray <murray.alex@gmail.com>
@@ -82,8 +82,7 @@
 
 (defun flycheck-clang-analyzer--predicate ()
   "Return t when should be active, nil if not."
-  (and (not (flycheck-clang-analyzer--buffer-is-header))
-       (flycheck-clang-analyzer--backend)))
+  (flycheck-clang-analyzer--backend))
 
 ;; cquery
 (defun flycheck-clang-analyzer--cquery-active ()
@@ -224,6 +223,7 @@ See `https://github.com/alexmurray/clang-analyzer/'."
             "-Xanalyzer" "-analyzer-output=text"
             source-inplace)
   :predicate flycheck-clang-analyzer--predicate
+  :enabled (lambda () (not (flycheck-clang-analyzer--buffer-is-header)))
   :working-directory flycheck-clang-analyzer--get-default-directory
   :verify flycheck-clang-analyzer--verify
   :error-patterns ((warning line-start (file-name) ":" line ":" column
