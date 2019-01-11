@@ -46,6 +46,18 @@
 (require 'cl-lib)
 (require 'flycheck)
 
+(flycheck-def-option-var flycheck-clang-analyzer-checks '("core" "cplusplus" "deadcode" "nullability" "optin.cplusplus.VirtualCall") clang-analyzer
+  "Enabled checks for clang-analyzer
+
+The value of this variable is a list of strings, where each
+string is the name of a check to enable. Either a whole group or individual checks can be enabled. By default all core, cplusplus, deadcode, nullability checks and optin.cplusplus.VirtualCall are enabled.
+
+  For a full list of supported checks look at URL `https://clang-analyzer.llvm.org/available_checks.html' and `https://clang-analyzer.llvm.org/alpha_checks.html'."
+  :type '(repeat :tag "Checks"
+                 (string :tag "Check Id"))
+  :safe #'flycheck-string-list-p)
+
+
 (defvar flycheck-clang-analyzer--backends
   '(((:name . cquery)
      (:active . flycheck-clang-analyzer--cquery-active)
@@ -220,7 +232,10 @@ See `https://github.com/alexmurray/clang-analyzer/'."
             "-fno-color-diagnostics" ; don't include color in output
             "-fno-caret-diagnostics" ; don't indicate location in output
             "-fno-diagnostics-show-option" ; don't show warning group
-            "-Xanalyzer" "-analyzer-output=text"
+            "-Xanalyzer"
+            (option "-analyzer-checker=" flycheck-clang-analyzer-checks concat
+                    flycheck-option-comma-separated-list)
+            "-analyzer-output=text"
             source-inplace)
   :predicate flycheck-clang-analyzer--predicate
   :enabled (lambda () (not (flycheck-clang-analyzer--buffer-is-header)))
