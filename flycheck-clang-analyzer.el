@@ -232,6 +232,7 @@ See `https://github.com/alexmurray/clang-analyzer/'."
             "-fno-color-diagnostics" ; don't include color in output
             "-fno-caret-diagnostics" ; don't indicate location in output
             "-fno-diagnostics-show-option" ; don't show warning group
+            "-Qunused-arguments"
             "-Xanalyzer"
             (option "-analyzer-checker=" flycheck-clang-analyzer-checks concat
                     flycheck-option-comma-separated-list)
